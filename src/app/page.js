@@ -2,7 +2,7 @@
 "use client"
 import InputImage from "../components/InputImage";
 import ColorGradingFilter  from "@/backend/filters/ColorGradingFilter";
-
+import { NextResponse } from 'next/server';
 import { useState,useRef } from 'react'
 
 
@@ -13,7 +13,7 @@ export default function Home() {
   const fileInputRef = useRef(null);
 
   
-  const processImage = async () => {
+  const processImage = async (image) => {
     if (!image?.file) return;
 
     setIsProcessing(true);
@@ -39,7 +39,7 @@ export default function Home() {
       const processedBlob = await response.blob();
       const processedUrl = URL.createObjectURL(processedBlob);
 
-      setProcessedImage(processedUrl);
+      setImage(processedUrl);
     }catch(error){
       console.error("Error processing image:", error);
     }
@@ -53,13 +53,10 @@ export default function Home() {
 
   return (
       <main >
-        <div className="flex flex-col items-center justify-center min-h-screen bg-black">
+        <div className="flex flex-col items-center mt-20 min-h-screen bg-black ">
          <h1 className="font-bold text-4xl mb-5">KoolPix</h1>
-         <InputImage image={image} setImage={setImage} />
-          {/* <button
-            onClick={() => processImage()}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-4"
-            disabled={!image} >Apply Filter</button> */}
+         <InputImage image={image} setImage={setImage} applyFilter={processImage} processedImage={processedImage} />
+          
         </div>
         
         
